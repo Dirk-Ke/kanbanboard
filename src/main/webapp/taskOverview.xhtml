@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>KanbanBoard</title>
+</h:head>
+
+<h:body>
+    <h:form id="tableForm">
+
+        <p:outputPanel>
+            <p:dataTable var="task" value="#{taskOverviewController.tasks}">
+                <p:column headerText="Name">
+                    <h:outputText value="#{task.name}" />
+                </p:column>
+
+                <p:column headerText="Description">
+                    <h:outputText value="#{task.description}" />
+                </p:column>
+
+                <f:facet name="footer">
+                    <p:commandButton id="newButton" value="NewTask"
+                                     action="#{taskOverviewController.action}"
+                                     partialSubmit="true" process="@this" update=":editForm"
+                                     oncomplete="PF('editDialog').show()" resetValues="true"/>
+                </f:facet>
+            </p:dataTable>
+        </p:outputPanel>
+    </h:form>
+
+    <!-- EditForm-->
+    <h:form id="editForm">
+        <p:dialog id="editDialogId" widgetVar='editDialog' header="New Task"
+                  modal="true" resizable="false" closeOnEscape="true">
+            <p:panelGrid id="editDataGrid">
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="name" value="Name"/>
+                    </p:column>
+
+                    <p:column>
+                        <p:inputText id="name" value="#{taskOverviewController.name}" required="true" maxlength="40"/>
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="description" value="Description"/>
+                    </p:column>
+
+                    <p:column>
+                        <p:inputTextarea id="description" value="#{taskOverviewController.description}" required="true"
+                                         maxlength="400" autoResize="true"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+
+            <f:facet name="footer">
+                <p:commandButton id="saveButton" value="Save"
+                                 action="#{taskOverviewController.saveTask}"
+                                 partialSubmit="true" process="@form" update=":editForm:editDataGrid"/>
+                <p:commandButton id="deleteButton" value="Delete"
+                                 action="#{taskOverviewController.action}"
+                                 onclick="PF('editDialog').hide()" partialSubmit="true" process="@this"/>
+                <p:commandButton id="cancelButton" value="Cancel"
+                                 onclick="PF('editDialog').hide()" partialSubmit="true" process="@this"/>
+            </f:facet>
+        </p:dialog>
+    </h:form>
+
+</h:body>
+</html>
